@@ -1,35 +1,30 @@
-var APIKey = "584c13c93f319b8d9eeb58517c2a171a";
-var cityName = "London";
-var numberofDays = 40;
-var queryURL =
-  "https://api.openweathermap.org/data/2.5/forecast/?q=" +
-  cityName +
-  "&appid=" +
-  APIKey +
-  "&cnt=" +
-  numberofDays;
+function getTheWeatherData(city) {
+  var APIKey = "584c13c93f319b8d9eeb58517c2a171a";
+  var queryURL =
+    "https://api.openweathermap.org/data/2.5/forecast/?q=" +
+    city +
+    "&appid=584c13c93f319b8d9eeb58517c2a171a";
 
-// GET NEXT 5 DAYS
-// Make an empty array
-daysArray = [];
-// iterate 5 times
-for (var i = 0; i < 5; i++) {
-  // store moment + i in m... moment today, moment tomorrow... for 5 days
-  var m = moment().add(i, "d");
-  // format all the moments into dd/mm/yyyy
-  var x = m.format("DD MM YYYY");
-  // push each day into days array
-  daysArray.push(x);
-}
+  // GET NEXT 5 DAYS
+  // Make an empty array
+  daysArray = [];
+  // iterate 5 times
+  for (var i = 0; i < 5; i++) {
+    // store moment + i in m... moment today, moment tomorrow... for 5 days
+    var m = moment().add(i, "d");
+    // format all the moments into dd/mm/yyyy
+    var x = m.format("DD MM YYYY");
+    // push each day into days array
+    daysArray.push(x);
+  }
 
-// Make an array for each day
-var day0 = []; /*TODAY*/
-var day1 = []; /*TOMORROW ....*/
-var day2 = [];
-var day3 = [];
-var day4 = [];
+  // Make an array for each day
+  var day0 = []; /*TODAY*/
+  var day1 = []; /*TOMORROW ....*/
+  var day2 = [];
+  var day3 = [];
+  var day4 = [];
 
-function getWeather() {
   $.ajax({
     url: queryURL,
     method: "GET",
@@ -66,15 +61,33 @@ function getWeather() {
         day4.push(response.list[i]);
       }
     }
+    //  NOW HAVE 5 ARRAYS EACH WITH THE DAY'S DATA STORED INSIDE
+    console.log("CURRENT DATA...");
+    console.log("response...", response);
+    console.log("The city name is...", response.city.name);
+    // TODO: display the date in the location
+    console.log("The date is...", response.list[0].dt_txt);
+    console.log("the weather icon is... ", response.list[0].weather[0].icon);
+    console.log("The wind speed is...", response.list[0].wind.speed);
+    console.log("The temperature is...", response.list[0].main.temp);
+    console.log("The humidity is...", response.list[0].main.humidity);
   });
 }
+id = "search-button";
+id = "search-input";
+$("#search-button").on("click", function (event) {
+  event.preventDefault();
+  var inputCity = $("#search-input").val().trim();
+
+  getTheWeatherData(inputCity);
+});
+
+// TODO: IF USER TYPES WRONG INFO, LIKE 'FGBFBFBFS', NO CITY WILL COME UP.
+// TODO: DISPLAY A MESSAGE
+
 //  NOW HAVE 5 ARRAYS EACH WITH THE DAY'S DATA STORED INSIDE
-console.log("today weather data", day0);
-console.log("tomorrow's weather data", day1);
-console.log("day after tomorrow's weather data", day1);
-console.log("next day", day1);
-console.log("next (last) day", day1);
-getWeather();
-
-
-// ---------------------------------------------------------
+// console.log(day0[0]);
+// console.log("tomorrow's weather data", day1.length);
+// console.log("day after tomorrow's weather data", day2);
+// console.log("next day", day3);
+// console.log("next (last) day", day4);
