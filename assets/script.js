@@ -29,17 +29,16 @@ function getTheWeatherData(city) {
     url: queryURL,
     method: "GET",
   }).then(function (response) {
-    // TODO:  CONVERT THE TIME ZONE TO LOCAL TIME
-    // console.log("The date is...", response.list[0].dt);
-    // gets the first three hour time interval - list[0] - in unix time
-    var myTime = response.list[0].dt;
+    // GET THE TIME IN UNIX
+    // gets the first from moment - converts to unix
+    var myTime = moment().unix();
     // Gets the time zone of the city (offset - in unix time)
     var timeZone = response.city.timezone;
     // Add the time to the offset - returns localtime - timezone in unix time
     var localTime = myTime + timeZone;
     // use moment.js to convert unix time to date formet
-    var dateString = moment.unix(localTime).format("DD/MM/YYYY");
-    console.log("local-time...", dateString);
+    var localDate = moment.unix(localTime).format("DD/MM/YYYY");
+    console.log("local-time...", localDate);
 
     // GET THE DATA AND STORE IT IN THE CORRECT DAY
     // -----------------------------------------
@@ -78,7 +77,7 @@ function getTheWeatherData(city) {
     console.log("response...", response);
     console.log("The city name is...", response.city.name);
     // TODO: display the date in the location
-    console.log("The date is...", response.list[0].dt_txt);
+    console.log("The date is...", localDate);
     console.log("the weather icon is... ", response.list[0].weather[0].icon);
     console.log("The wind speed is...", response.list[0].wind.speed);
     console.log("The temperature is...", response.list[0].main.temp);
