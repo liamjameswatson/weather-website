@@ -46,29 +46,26 @@ function getTheWeatherData(city) {
     for (var i = 0; i < response.list.length; i++) {
       // GET THE DATE DD MM YYYY ----------
       var dateAndTime = response.list[i].dt_txt;
-      var year = dateAndTime.slice(0, 4);
-      var month = dateAndTime.slice(5, 7);
-      var day = dateAndTime.slice(8, 10);
-      var date = day + " " + month + " " + year;
-      // console.log(date)
-      // -------------------------------------
+      var apiDate = moment(dateAndTime).format("DD/MM/YYYY");
+      console.log("dateAndTime...", apiDate);
+
       // IF THE DATE === TODAY
-      if (date === daysArray[0]) {
+      if (apiDate === daysArray[0]) {
         // push the info from the api into the TODAY array
         day0.push(response.list[i]);
       }
       // same for tomorrow...
-      if (date === daysArray[1]) {
+      if (apiDate === daysArray[1]) {
         day1.push(response.list[i]);
       }
-      if (date === daysArray[2]) {
+      if (apiDate === daysArray[2]) {
         day2.push(response.list[i]);
       }
-      if (date === daysArray[3]) {
+      if (apiDate === daysArray[3]) {
         day3.push(response.list[i]);
       }
 
-      if (date === daysArray[4]) {
+      if (apiDate === daysArray[4]) {
         day4.push(response.list[i]);
       }
     }
