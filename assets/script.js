@@ -29,7 +29,7 @@ function getTheWeatherData(city) {
     url: queryURL,
     method: "GET",
   }).then(function (response) {
-    // console.log("The date is...", response.list[0].dt);
+    // GET THE TIME IN UNIX
     // gets the first from moment - converts to unix
     var myTime = moment().unix();
     // Gets the time zone of the city (offset - in unix time)
