@@ -39,6 +39,7 @@ function getTheWeatherData(city) {
     url: queryURL,
     method: "GET",
   }).then(function (response) {
+    console.log(response);
     // console.log(city, " - ", response.list[0]);
     // GET THE TIME IN UNIX
     // gets the first from moment - converts to unix
@@ -79,7 +80,6 @@ function getTheWeatherData(city) {
       if (apiDate === daysArray[3]) {
         day3.push(response.list[i]);
       }
-
       if (apiDate === daysArray[4]) {
         day4.push(response.list[i]);
       }
@@ -90,12 +90,32 @@ function getTheWeatherData(city) {
     console.log("CURRENT DATA...");
     console.log("response...", response);
     console.log("The city name is...", response.city.name);
+    var searchedCity = $("<h1>").text(response.city.name);
+    console.log("this city", $("#city").text());
+    $("#city").empty();
     console.log("The date is...", localDate);
+    var todaysDate = $("<p>").text(localDate);
+    console.log("this city", $("#city").text());
     console.log("the weather icon is... ", response.list[0].weather[0].icon);
-    console.log("The wind speed is...", response.list[0].wind.speed);
-    console.log("The temperature is...", response.list[0].main.temp);
-    console.log("The humidity is...", response.list[0].main.humidity);
 
+    console.log("The temperature is...", response.list[0].main.temp);
+    var temperature = response.list[0].main.temp;
+    var todaysTemp = $("<p>").text("Temp : " + temperature);
+
+    console.log("The humidity is...", response.list[0].main.humidity);
+    var humidity = response.list[0].main.humidity;
+    var todaysHumidity = $("<p>").text("Humidity : " + humidity);
+
+    console.log("The wind speed is...", response.list[0].wind.speed);
+    var windSpeed = response.list[0].wind.speed;
+    var todayswindSpeed = $("<p>").text("windspeed : " + windSpeed);
+    $("#city").append(
+      searchedCity,
+      todaysDate,
+      todaysTemp,
+      todaysHumidity,
+      todayswindSpeed
+    );
     // console.log(".......................");
     // console.log(dailyWeatherData);
     // console.log(".......................");
