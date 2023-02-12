@@ -14,7 +14,6 @@ function getTheWeatherData(city) {
     "https://api.openweathermap.org/data/2.5/forecast/?q=" +
     city +
     "&appid=584c13c93f319b8d9eeb58517c2a171a";
-
   // GET NEXT 5 DAYS
   // Make an empty array
   daysArray = [];
@@ -39,19 +38,10 @@ function getTheWeatherData(city) {
     url: queryURL,
     method: "GET",
   }).then(function (response) {
-    console.log(response);
-    // console.log(city, " - ", response.list[0]);
-    // GET THE TIME IN UNIX
-    // gets the first from moment - converts to unix
-    var myTime = moment().unix();
-
-    // Gets the time zone of the city (offset - in unix time)
-    var timeZone = response.city.timezone;
-    // Add the time to the offset - returns localtime - timezone in unix time
-    var localTime = myTime + timeZone;
-    // use moment.js to convert unix time to date formet
-    var localDate = moment.unix(localTime).format("DD/MM/YYYY");
-    console.log("local-date...", localDate);
+    var data = response;
+    console.log("GET THE TIME............................");
+    getTheTime(data);
+    console.log("................................");
 
     // GET THE DATA AND STORE IT IN THE CORRECT DAY
     // -----------------------------------------
@@ -291,15 +281,25 @@ $("#search-button").on("click", function (event) {
 
 // TODO: var dateString = moment.unix(value).format("MM/DD/YYYY");
 
-getTheTime = () => {
-  // for each response get the timezone in unix time
+getTheTime = (data) => {
+  var myTime = moment().unix();
+  // Gets the time zone of the city (offset - in unix time)
   var timeZone = data.city.timezone;
-  console.log(response.city.name);
+  // Add the time to the offset - returns localtime - timezone in unix time
+  var localTime = myTime + timeZone;
+  // use moment.js to convert unix time to date formet
+  // var localDate = moment.unix(localTime).format("DD/MM/YYYY");
+
+  // console.log("local-date...= ", localDate);
   // for each weather time increment, get the date by adding the dt to timezone.
-  for (var i = 0; i < response.list.length; i++) {
-    console.log(
-      moment.unix(timeZone + response.list[i].dt).format("DD/YY/YYYY")
-    );
-    // This splits the 40 weather increments up into local dates.
+
+  var daysArray = [];
+  for (var i = 0; i < data.list.length; i++) {
+    var date = moment.unix(timeZone + data.list[i].dt).format("DD/MM/YYYY");
+    console.log(date);
+    daysArray.push(date);
   }
+  var daysArray = [...new Set(daysArray)];
+
+  console.log(daysArray);
 };
