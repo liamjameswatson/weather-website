@@ -87,31 +87,35 @@ function getTheWeatherData(city) {
 
     var dailyWeatherData = [day0, day1, day2, day3, day4];
     //  NOW HAVE 5 ARRAYS EACH WITH THE DAY'S DATA STORED INSIDE
-    // console.log("CURRENT DATA...");
-    // console.log("response...", response);
-    // console.log("The city name is...", response.city.name);
+    console.log("CURRENT DATA...");
+    console.log("response...", response);
+    console.log("The city name is...", response.city.name);
     var searchedCity = $("<h1>").text(response.city.name);
+    console.log("this city", $("#city").text());
+    $("#city").empty();
     console.log("The date is...", localDate);
     var todaysDate = $("<p>").text(localDate);
     console.log("this city", $("#city").text());
     console.log("the weather icon is... ", response.list[0].weather[0].icon);
 
-    // console.log("The temperature is...", response.list[0].main.temp);
+    console.log("The temperature is...", response.list[0].main.temp);
     var temperature = response.list[0].main.temp;
     var todaysTemp = $("<p>").text("Temp : " + temperature);
 
-    // console.log("The humidity is...", response.list[0].main.humidity);
+    console.log("The humidity is...", response.list[0].main.humidity);
     var humidity = response.list[0].main.humidity;
     var todaysHumidity = $("<p>").text("Humidity : " + humidity);
 
-    // console.log("The wind speed is...", response.list[0].wind.speed);
+    console.log("The wind speed is...", response.list[0].wind.speed);
     var windSpeed = response.list[0].wind.speed;
     var todayswindSpeed = $("<p>").text("windspeed : " + windSpeed);
-
-    $("#city").empty();
-    $(".card-text").empty();
-    $("#city").append(searchedCity, todaysDate);
-    $(".card-text").append(todaysTemp, todaysHumidity, todayswindSpeed);
+    $("#city").append(
+      searchedCity,
+      todaysDate,
+      todaysTemp,
+      todaysHumidity,
+      todayswindSpeed
+    );
     // console.log(".......................");
     // console.log(dailyWeatherData);
     // console.log(".......................");
@@ -286,3 +290,16 @@ $("#search-button").on("click", function (event) {
 // convert to readable format
 
 // TODO: var dateString = moment.unix(value).format("MM/DD/YYYY");
+
+getTheTime = () => {
+  // for each response get the timezone in unix time
+  var timeZone = data.city.timezone;
+  console.log(response.city.name);
+  // for each weather time increment, get the date by adding the dt to timezone.
+  for (var i = 0; i < response.list.length; i++) {
+    console.log(
+      moment.unix(timeZone + response.list[i].dt).format("DD/YY/YYYY")
+    );
+    // This splits the 40 weather increments up into local dates.
+  }
+};
