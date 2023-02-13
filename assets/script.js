@@ -296,14 +296,42 @@ getTheDates = (data) => {
   }
   // remove the duplicate dates, but sending them to a set.
   var daysArray = [...new Set(daysArray)];
+  // ------------------------------------------------------------
+  for (var i = 0; i < data.list.length; i++) {
+    var date = moment.unix(timeZone + data.list[i].dt).format("DD/MM/YYYY");
+    console.log(date, data.list[i].main.temp);
+  }
   return daysArray;
 };
 
 eachDaysData = (data, arr) => {
+  var myTime = moment().unix();
+
+  var timeZone = data.city.timezone;
+
+  var localTime = myTime + timeZone;
   for (var i = 0; i < data.list.length; i++) {
-    console.log(data);
-    console.log("...............................");
-    console.log(arr);
+    var date = moment.unix(timeZone + data.list[i].dt).format("DD/MM/YYYY");
+    console.log("TEMP");
+    console.log(date, data.list[i].main.temp);
+    console.log("..........................");
+
+    console.log("WIND");
+    console.log(date, data.list[i].wind.speed);
+    console.log("..........................");
+
+    console.log("HUMIDITY");
+    console.log(date, data.list[i].main.humidity);
+    console.log("..........................");
+
+    console.log("ICON");
+    console.log(date, data.list[i].weather[0].icon);
+    console.log("..........................");
+    for (var j = 0; j < arr.length; j++) {
+      if (date === arr[j]) {
+        console.log("HELLO");
+      }
+    }
   }
 };
 // create a new object for each day
