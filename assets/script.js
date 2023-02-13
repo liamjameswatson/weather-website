@@ -306,37 +306,20 @@ getTheDates = (data) => {
 
 eachDaysData = (data, arr) => {
   var myTime = moment().unix();
-
   var timeZone = data.city.timezone;
-
-  var localTime = myTime + timeZone;
   for (var i = 0; i < data.list.length; i++) {
     var date = moment.unix(timeZone + data.list[i].dt).format("DD/MM/YYYY");
-    console.log("TEMP");
-    console.log(date, data.list[i].main.temp);
-    console.log("..........................");
-
-    console.log("WIND");
-    console.log(date, data.list[i].wind.speed);
-    console.log("..........................");
-
-    console.log("HUMIDITY");
-    console.log(date, data.list[i].main.humidity);
-    console.log("..........................");
-
-    console.log("ICON");
-    console.log(date, data.list[i].weather[0].icon);
-    console.log("..........................");
-    for (var j = 0; j < arr.length; j++) {
-      if (date === arr[j]) {
-        console.log("HELLO");
+    $(arr).each(function (index) {
+      if (date === arr[index]) {
+        arr[index] = {
+          date: date,
+          temp: [1, 2, 3, 4, 5],
+          humidity: [1, 2, 3, 4, 5, 6],
+          windSpeed: [1, 2, 3, 4, 5, 6],
+          icon: ["icon1", "icon2", "icon4", "icon3"],
+        };
       }
-    }
+    });
   }
+  console.log(arr);
 };
-// create a new object for each day
-// day [i] = {
-//       temp: []
-//       humidty: []
-//       wind: []
-//     }
