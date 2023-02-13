@@ -39,10 +39,8 @@ function getTheWeatherData(city) {
     method: "GET",
   }).then(function (response) {
     var data = response;
-    console.log("GET THE TIME............................");
-    getTheTime(data);
-    console.log("................................");
-
+    dates = getTheDates(data);
+    eachDaysData(data, dates);
     // GET THE DATA AND STORE IT IN THE CORRECT DAY
     // -----------------------------------------
     // iterate through the data list from the api
@@ -83,8 +81,8 @@ function getTheWeatherData(city) {
     var searchedCity = $("<h1>").text(response.city.name);
     console.log("this city", $("#city").text());
     $("#city").empty();
-    console.log("The date is...", localDate);
-    var todaysDate = $("<p>").text(localDate);
+    // console.log("The date is...", localDate);
+    // var todaysDate = $("<p>").text(localDate);
     console.log("this city", $("#city").text());
     console.log("the weather icon is... ", response.list[0].weather[0].icon);
 
@@ -101,7 +99,7 @@ function getTheWeatherData(city) {
     var todayswindSpeed = $("<p>").text("windspeed : " + windSpeed);
     $("#city").append(
       searchedCity,
-      todaysDate,
+      // todaysDate,
       todaysTemp,
       todaysHumidity,
       todayswindSpeed
@@ -279,27 +277,38 @@ $("#search-button").on("click", function (event) {
 // Obtain destination city's offset in hours and convert to milliseconds
 // convert to readable format
 
-// TODO: var dateString = moment.unix(value).format("MM/DD/YYYY");
-
-getTheTime = (data) => {
+// Function to get the dates for each timezone, and returns an array (set) of dates
+getTheDates = (data) => {
   var myTime = moment().unix();
-  // Gets the time zone of the city (offset - in unix time)
+
   var timeZone = data.city.timezone;
-  // Add the time to the offset - returns localtime - timezone in unix time
+
   var localTime = myTime + timeZone;
-  // use moment.js to convert unix time to date formet
-  // var localDate = moment.unix(localTime).format("DD/MM/YYYY");
-
-  // console.log("local-date...= ", localDate);
-  // for each weather time increment, get the date by adding the dt to timezone.
-
+  // Create a an emptyy array to hold the days
   var daysArray = [];
+  // for every piece of weather data
   for (var i = 0; i < data.list.length; i++) {
+    // get the date from the timezone offset
     var date = moment.unix(timeZone + data.list[i].dt).format("DD/MM/YYYY");
     console.log(date);
+    // move the date to the days array
     daysArray.push(date);
   }
+  // remove the duplicate dates, but sending them to a set.
   var daysArray = [...new Set(daysArray)];
-
-  console.log(daysArray);
+  return daysArray;
 };
+
+eachDaysData = (data, arr) => {
+  for (var i = 0; i < data.list.length; i++) {
+    console.log(data);
+    console.log("...............................");
+    console.log(arr);
+  }
+};
+// create a new object for each day
+// day [i] = {
+//       temp: []
+//       humidty: []
+//       wind: []
+//     }
