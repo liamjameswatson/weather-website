@@ -19,9 +19,11 @@ function getTheWeatherData(city) {
     var data = response;
     var timeZone = data.city.timezone;
     var newArray = [];
-    // ------------------------------------------------------------
+    // for every list in api call
     for (var i = 0; i < data.list.length; i++) {
+      // Get the local date
       var date = moment.unix(timeZone + data.list[i].dt).format("DD/MM/YYYY");
+      // filter the data and push it to newArray
       newArray.push({
         date: date,
         weatherArray: {
@@ -33,6 +35,7 @@ function getTheWeatherData(city) {
       });
     }
     console.log(newArray);
+    // returns a newArray with all the relevant information
     return newArray;
   });
 }
