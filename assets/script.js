@@ -7,7 +7,6 @@ function dataAverage(array) {
 
   return averageOfArray;
 }
-
 function getTheWeatherData(city) {
   $.ajax({
     url:
@@ -34,14 +33,54 @@ function getTheWeatherData(city) {
         },
       });
     }
-    console.log(newArray);
     // returns a newArray with all the relevant information
-    return newArray;
+    var dates = getTheDates(newArray);
+    sortDatesAndData(newArray, dates);
   });
+}
+
+// pushes all the dates to an array, and then removes duplicates by creating a set.
+function getTheDates(data) {
+  var dates = [];
+  for (var i = 0; i < data.length; i++) {
+    dates.push(data[i].date);
+  }
+  dates = [...new Set(dates)];
+  return dates;
 }
 
 $("#search-button").on("click", function (event) {
   event.preventDefault();
   var inputCity = $("#search-input").val().trim();
-  var data = getTheWeatherData(inputCity);
+  getTheWeatherData(inputCity);
 });
+
+function sortDatesAndData(data, dates) {
+  console.log(dates);
+  console.log(data);
+
+  $(dates).each(function (index) {
+    console.log(dates[index]);
+    for (var i = 0; i < data.length; i++) {
+      if (dates[index] === data[i].date) {
+        dates[index] = {
+          date: data[i].date,
+          temp: [],
+          humidity: [],
+          wind: [],
+          icon: [],
+        };
+      }
+    }
+
+    for (var i = 0; i < data.length; i++) {
+      if (dates[index].date === data[i].date) {
+        dates[index].temp.push(data[i].weatherArray.temp);
+        dates[index].humidity.push(data[i].weatherArray.humidity);
+        dates[index].icon.push(data[i].weatherArray.icon);
+        dates[index].wind.push(data[i].weatherArray.wind);
+      }
+    }
+    console.log(dates);
+  });
+}
