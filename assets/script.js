@@ -1,12 +1,3 @@
-function dataAverage(array) {
-  var sumOfArray = 0;
-  for (var i = 0; i < array.length; i++) {
-    sumOfArray = sumOfArray + array[i];
-  }
-  averageOfArray = sumOfArray / array.length;
-
-  return averageOfArray;
-}
 function getTheWeatherData(city) {
   $.ajax({
     url:
@@ -35,7 +26,15 @@ function getTheWeatherData(city) {
     }
     // returns a newArray with all the relevant information
     var dates = getTheDates(newArray);
-    sortDatesAndData(newArray, dates);
+    var dateObjects = sortDatesAndData(newArray, dates);
+    console.log(dateObjects);
+    dateObjects.forEach(function (index) {
+      index.temp = dataAverage(index.temp) - 273.15;
+      index.humidity = dataAverage(index.humidity);
+      index.wind = dataAverage(index.wind);
+    });
+
+    console.log(dateObjects);
   });
 }
 
@@ -81,6 +80,20 @@ function sortDatesAndData(data, dates) {
         dates[index].wind.push(data[i].weatherArray.wind);
       }
     }
+
     console.log(dates);
   });
+  return dates;
+}
+
+function dataAverage(array) {
+  console.log(array);
+  var sumOfArray = 0;
+  for (var i = 0; i < array.length; i++) {
+    console.log(i);
+    sumOfArray = sumOfArray + array[i];
+  }
+  averageOfArray = sumOfArray / array.length;
+  console.log(averageOfArray);
+  return averageOfArray;
 }
