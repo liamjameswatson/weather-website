@@ -27,13 +27,12 @@ function getTheWeatherData(city) {
     // returns a newArray with all the relevant information
     var dates = getTheDates(newArray);
     var dateObjects = sortDatesAndData(newArray, dates);
-    console.log(dateObjects);
-    dateObjects.forEach(function (index) {
-      index.temp = dataAverage(index.temp) - 273.15;
-      index.humidity = dataAverage(index.humidity);
-      index.wind = dataAverage(index.wind);
-    });
 
+    dateObjects.forEach(function (index) {
+      index.temp = Math.round(dataAverage(index.temp) - 273.15); /* C*/
+      index.humidity = Math.round(dataAverage(index.humidity)); /* % */
+      index.wind = dataAverage(index.wind).toFixed(2); /* %km/h*/
+    });
     console.log(dateObjects);
   });
 }
@@ -55,11 +54,7 @@ $("#search-button").on("click", function (event) {
 });
 
 function sortDatesAndData(data, dates) {
-  console.log(dates);
-  console.log(data);
-
   $(dates).each(function (index) {
-    console.log(dates[index]);
     for (var i = 0; i < data.length; i++) {
       if (dates[index] === data[i].date) {
         dates[index] = {
@@ -80,20 +75,16 @@ function sortDatesAndData(data, dates) {
         dates[index].wind.push(data[i].weatherArray.wind);
       }
     }
-
-    console.log(dates);
   });
   return dates;
 }
 
 function dataAverage(array) {
-  console.log(array);
   var sumOfArray = 0;
   for (var i = 0; i < array.length; i++) {
-    console.log(i);
     sumOfArray = sumOfArray + array[i];
   }
   averageOfArray = sumOfArray / array.length;
-  console.log(averageOfArray);
+
   return averageOfArray;
 }
