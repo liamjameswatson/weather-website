@@ -32,6 +32,8 @@ function getTheWeatherData(city) {
       index.temp = Math.round(dataAverage(index.temp) - 273.15); /* C*/
       index.humidity = Math.round(dataAverage(index.humidity)); /* % */
       index.wind = dataAverage(index.wind).toFixed(2); /* %km/h*/
+      console.log(index.icon);
+      index.icon = getMode(index.icon);
     });
     console.log(dateObjects);
   });
@@ -87,4 +89,34 @@ function dataAverage(array) {
   averageOfArray = sumOfArray / array.length;
 
   return averageOfArray;
+}
+
+function getMode(arr) {
+  // made an object, with the eleent and frequency as key/value pairs
+  var frequencyCounter = {};
+  // the inital max element is the first element
+  var maxElement = arr[0];
+  // and inital the max count = 1
+  var maxCount = 1;
+
+  for (var i = 0; i < arr.length; i++) {
+    // element = the element[i] in array
+    var element = arr[i];
+    // if element already in frequency counter, increase the frequency by 1
+    if (frequencyCounter[element]) {
+      frequencyCounter[element]++;
+    }
+    // if not, add it to to the object, with a frequency of 1
+    else {
+      frequencyCounter[element] = 1;
+    }
+    // if the f frequencyCounter[element] is greater than the maxElement
+    if (frequencyCounter[element] > maxCount) {
+      // this element becomes the maxium element
+      maxElement = element;
+      // and this count becomes the maxium count
+      maxCount = frequencyCounter[element];
+    }
+  }
+  return maxElement;
 }
