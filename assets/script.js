@@ -5,6 +5,7 @@ $("#search-button").on("click", function (event) {
   // returns a capital city for each word of the city input. So if user inputs paris, and then types Paris, one button will be displayed.
   inputCity = capitaliseEachWord(inputCity);
   getTheWeatherData(inputCity);
+  $("#search-input").val("");
 });
 
 //  Gets the data for the city from t he API by an ajax call
@@ -148,9 +149,8 @@ function displayData(dates, city) {
   <div class="col-sm">
     <div class="card" style="width: 18rem">
       <div class="card-body">
-        <h2 class="card-title" id="city">${city} ${dates[0].date} ${dates[0].icon}</h2>
-        <img class="card-img-top" src="..." alt="Card image cap" />
-        <img class="card-img-top" alt="icon" />
+        <h2 class="card-title" id="city">${city} ${dates[0].date}<img src='https://openweathermap.org/img/wn/${dates[0].icon}@2x.png' alt="icon"/></h2>
+
         <ul>
           <li class='temp'>Temp: ${dates[0].temp}</li>
           <li>Wind: ${dates[0].wind}</li>
@@ -170,8 +170,7 @@ function displayData(dates, city) {
   <div class="card col-2">
     <div class="card-body">
       <h5 class="card-title">${dates[i].date}</h5>
-      <img class="card-img-top" alt="icon" />
-      <${dates[i].icon}>
+      <img src='https://openweathermap.org/img/wn/${dates[i].icon}@2x.png' alt="icon"/>
       <ul>
         <li>Temp: ${dates[i].temp}</li>
         <li>Wind: ${dates[i].wind}</li>
@@ -189,8 +188,7 @@ function displayData(dates, city) {
   <div class="card col-2">
     <div class="card-body">
       <h5 class="card-title">${dates[i].date}</h5>
-      <img class="card-img-top" alt="icon" />
-      <${dates[i].icon}>
+      <img class="card-img-top" <img src='https://openweathermap.org/img/wn/${dates[i].icon}@2x.png'> alt="icon"><${dates[i].icon}/>
       <ul>
         <li>Temp: ${dates[i].temp}</li>
         <li>Wind: ${dates[i].wind}</li>
@@ -240,9 +238,13 @@ function displayHistoryButtons() {
   // got every element of the array, create a button
   for (var i = 0; i < getSearchHistory.length; i++) {
     $("#history").append(
-      `<button type="button" class="btn btn-primary">${getSearchHistory[i]}</button>`
+      `<button type="button" class="search-history-btn btn btn-primary">${getSearchHistory[i]}</button>`
     );
   }
+  $(".search-history-btn").on("click", function (event) {
+    var city = event.target.textContent;
+    getTheWeatherData(city);
+  });
 }
 // displays the buttons when the page first loads, from local storage
 displayHistoryButtons();
