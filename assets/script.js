@@ -240,9 +240,13 @@ function displayHistoryButtons() {
   // got every element of the array, create a button
   for (var i = 0; i < getSearchHistory.length; i++) {
     $("#history").append(
-      `<button type="button" class="btn btn-primary">${getSearchHistory[i]}</button>`
+      `<button type="button" class="search-history-btn btn btn-primary">${getSearchHistory[i]}</button>`
     );
   }
+  $(".search-history-btn").on("click", function (event) {
+    var city = event.target.textContent;
+    getTheWeatherData(city);
+  });
 }
 // displays the buttons when the page first loads, from local storage
 displayHistoryButtons();
