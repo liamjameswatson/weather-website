@@ -1,3 +1,13 @@
+// When search button is clicked, send the search input into the ajax function. Gets the data for the inputted city
+$("#search-button").on("click", function (event) {
+  event.preventDefault();
+  var inputCity = $("#search-input").val().trim();
+  // returns a capital city for each word of the city input. So if user inputs paris, and then types Paris, one button will be displayed.
+  inputCity = capitaliseEachWord(inputCity);
+  getTheWeatherData(inputCity);
+});
+
+//  Gets the data for the city from t he API by an ajax call
 function getTheWeatherData(city) {
   $.ajax({
     url:
@@ -6,15 +16,18 @@ function getTheWeatherData(city) {
       "&appid=584c13c93f319b8d9eeb58517c2a171a",
     method: "GET",
   }).then(function (response) {
+    // the whole repsonse is stored in a variable 'data
     var data = response;
+    // a timezone stores the timezone offset for the city
     var timeZone = data.city.timezone;
-    var newArray = [];
+    // make a new blank data array for each call
+    var dataArray = [];
     // for every list in api call
     for (var i = 0; i < data.list.length; i++) {
       // Get the local date
       var date = moment.unix(timeZone + data.list[i].dt).format("DD/MM/YYYY");
-      // filter the data and push it to newArray
-      newArray.push({
+      // make a new object for each day, and push it to the dataArray. The array has 40 objects
+      dataArray.push({
         date: date,
         weatherArray: {
           temp: data.list[i].main.temp,
@@ -23,40 +36,40 @@ function getTheWeatherData(city) {
           icon: data.list[i].weather[0].icon,
         },
       });
+      // The dataArray now contains 5 or 6 objects
     }
-    // returns a newArray with all the relevant information
-    var dates = getTheDates(newArray);
-    var dateObjects = sortDatesAndData(newArray, dates);
+    // send the 40 dates from the dataArray to a function, to remove dupliates and returns an array of 5 or 6 dates
+    var dates = getTheDates(dataArray);
+    // sends the 40 objects into the function and the 5/6 dates,
+    var dateObjects = sortDatesAndData(dataArray, dates);
 
     dateObjects.forEach(function (index) {
       index.temp = Math.round(dataAverage(index.temp) - 273.15); /* C*/
       index.humidity = Math.round(dataAverage(index.humidity)); /* % */
       index.wind = dataAverage(index.wind).toFixed(2); /* %km/h*/
-      console.log(index.icon);
       index.icon = getMode(index.icon);
     });
-    console.log(dateObjects);
+    displayData(dateObjects, city); /* displays the data to the html page* */
+    saveToLocalStorage(city); /*saves the city to local storage */
+    displayHistoryButtons(city); /*makes a button on each search*/
   });
 }
 
-// pushes all the dates to an array, and then removes duplicates by creating a set.
+// Takes the 40 dates from the api data and removes duplicates.
 function getTheDates(data) {
   var dates = [];
   for (var i = 0; i < data.length; i++) {
     dates.push(data[i].date);
   }
   dates = [...new Set(dates)];
+  // returns an array of 5 or 6 dates, depending on the local time.
   return dates;
 }
 
-$("#search-button").on("click", function (event) {
-  event.preventDefault();
-  var inputCity = $("#search-input").val().trim();
-  getTheWeatherData(inputCity);
-});
-
 function sortDatesAndData(data, dates) {
+  // sends in 40 objects and 5/6 dates
   $(dates).each(function (index) {
+    //  each of the 5/6 dates, if the data matches the date, make a blank array
     for (var i = 0; i < data.length; i++) {
       if (dates[index] === data[i].date) {
         dates[index] = {
@@ -68,8 +81,10 @@ function sortDatesAndData(data, dates) {
         };
       }
     }
+    console.log(dates);
 
     for (var i = 0; i < data.length; i++) {
+      // loop through dates and data and push the data to the date arrays.
       if (dates[index].date === data[i].date) {
         dates[index].temp.push(data[i].weatherArray.temp);
         dates[index].humidity.push(data[i].weatherArray.humidity);
@@ -78,6 +93,8 @@ function sortDatesAndData(data, dates) {
       }
     }
   });
+  // returns a date array each with an object of arrays with 8 or less elements in.
+  // The temperature, for example is in each date array. Depending on time, the array may contain less than 8 elements
   return dates;
 }
 
@@ -119,4 +136,127 @@ function getMode(arr) {
     }
   }
   return maxElement;
+}
+
+function displayData(dates, city) {
+  $("#today").empty();
+  $("#5-day-forecast").empty();
+  console.log(dates);
+  $("#today").append(
+    `
+  <div class="row">
+  <div class="col-sm">
+    <div class="card" style="width: 18rem">
+      <div class="card-body">
+        <h2 class="card-title" id="city">${city} ${dates[0].date} ${dates[0].icon}</h2>
+        <img class="card-img-top" src="..." alt="Card image cap" />
+        <img class="card-img-top" alt="icon" />
+        <ul>
+          <li class='temp'>Temp: ${dates[0].temp}</li>
+          <li>Wind: ${dates[0].wind}</li>
+          <li>Humidity: ${dates[0].humidity}</li>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+`
+  );
+
+  if (dates.length === 6) {
+    for (var i = 1; i < dates.length; i++) {
+      $("#5-day-forecast").append(
+        `
+  <div class="card col-2">
+    <div class="card-body">
+      <h5 class="card-title">${dates[i].date}</h5>
+      <img class="card-img-top" alt="icon" />
+      <${dates[i].icon}>
+      <ul>
+        <li>Temp: ${dates[i].temp}</li>
+        <li>Wind: ${dates[i].wind}</li>
+        <li>Humidity: ${dates[i].humidity}</li>
+      </ul>
+    </div>
+  </div>
+    `
+      );
+    }
+  } else {
+    for (var i = 0; i < dates.length; i++) {
+      $("#5-day-forecast").append(
+        `
+  <div class="card col-2">
+    <div class="card-body">
+      <h5 class="card-title">${dates[i].date}</h5>
+      <img class="card-img-top" alt="icon" />
+      <${dates[i].icon}>
+      <ul>
+        <li>Temp: ${dates[i].temp}</li>
+        <li>Wind: ${dates[i].wind}</li>
+        <li>Humidity: ${dates[i].humidity}</li>
+      </ul>
+    </div>
+  </div>
+    `
+      );
+    }
+  }
+}
+
+function saveToLocalStorage(city) {
+  // if local storage is empty - searchHistory array is blank
+  if (localStorage.length === 0) {
+    var searchHistory = [];
+    console.log(searchHistory);
+  } else {
+    // if not search history = localStorage
+    var searchHistory = JSON.parse(localStorage.getItem("cities"));
+    console.log(searchHistory);
+  }
+  for (var i = 0; i < searchHistory.length; i++) {
+    // if city is already in the search history array remove it
+    if (searchHistory[i] === city) {
+      searchHistory.splice(i, 1);
+    }
+    // add the searched city to the first item in searchHistory array
+  }
+  searchHistory.unshift(city);
+  searchHistory;
+  if (searchHistory.length > 5) {
+    // if searHistory array is longer than 5, delete the last element
+    searchHistory.pop();
+  }
+  // send the search history to local storage
+  localStorage.setItem("cities", JSON.stringify(searchHistory));
+}
+
+// for every city in local storage array make a button the city on it.
+function displayHistoryButtons() {
+  // empty the history div, before dislaying the new ones
+  $("#history").empty();
+  // get the array from local storage
+  var getSearchHistory = JSON.parse(localStorage.getItem("cities"));
+  // got every element of the array, create a button
+  for (var i = 0; i < getSearchHistory.length; i++) {
+    $("#history").append(
+      `<button type="button" class="btn btn-primary">${getSearchHistory[i]}</button>`
+    );
+  }
+}
+// displays the buttons when the page first loads, from local storage
+displayHistoryButtons();
+
+function capitaliseEachWord(element) {
+  // Capitalises each first letter of a word, the rest is lowercase. good for names and places.
+  var words = element.split(" ");
+  console.log(words);
+  for (let i = 0; i < words.length; i++) {
+    words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+  }
+  words.join("");
+  words = words.toString();
+  /* removes the commas, that are added when split() happens */
+  words = words.replaceAll(",", " ");
+  return words;
 }
