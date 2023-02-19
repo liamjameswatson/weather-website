@@ -48,7 +48,13 @@ function getTheWeatherData(city) {
       index.temp = Math.round(dataAverage(index.temp) - 273.15); /* C*/
       index.humidity = Math.round(dataAverage(index.humidity)); /* % */
       index.wind = dataAverage(index.wind).toFixed(2); /* %km/h*/
-      index.icon = getMode(index.icon);
+      // Accounts for night time. Filters out night time data, displaying the average day time.
+      if (index.icon.length === 8) {
+        index.icon = getMode(index.icon.slice(2, 6));
+      } else {
+        index.icon = index.icon;
+        index.icon = getMode(index.icon);
+      }
     });
     displayData(dateObjects, city); /* displays the data to the html page* */
     saveToLocalStorage(city); /*saves the city to local storage */
