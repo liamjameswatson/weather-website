@@ -1,3 +1,46 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 li {
   list-style: none;
+}
+
+.card {
+  margin: 1%;
+  padding: 1%;
+}
+
+.search-history-btn {
+  background-color: green !important;
+  border: none !important;
+  margin: 2%;
+  width: 80%;
+}
+
+.rain-showers {
+  background-image: url("./images/rain-image.jpg");
+}
+.cloudy-sky {
+  background-image: url("./images/cloudy-sky.jpg");
+}
+.rain {
+  background-image: url("./images/heavy-rain.jpg");
+}
+.snow {
+  background-image: url("./images/snow-flake.jpg");
+}
+.some-cloud-blue-sky {
+  background-image: url("./images/some-cloud-blue-sky.jpg");
+}
+.sunny-day {
+  background-image: url("./images/sunny-day.jpg");
+}
+.thunder-storm {
+  background-image: url("./images/thunder-storm.jpg");
+}
+.fog {
+  background-image: url("./images/fog.jpg");
 }

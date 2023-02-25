@@ -88,7 +88,6 @@ function sortDatesAndData(data, dates) {
         };
       }
     }
-    console.log(dates);
 
     for (var i = 0; i < data.length; i++) {
       // loop through dates and data and push the data to the date arrays.
@@ -148,12 +147,9 @@ function getMode(arr) {
 function displayData(dates, city) {
   $("#today").empty();
   $("#5-day-forecast").empty();
-  console.log(dates);
   $("#today").append(
     `
-  <div class="row">
-  <div class="col-sm">
-    <div class="card" style="width: 18rem">
+    <div class="card" style="width: 60%">
       <div class="card-body">
         <h2 class="card-title" id="city">${city} ${dates[0].date}<img src='https://openweathermap.org/img/wn/${dates[0].icon}@2x.png' alt="icon"/></h2>
 
@@ -162,18 +158,17 @@ function displayData(dates, city) {
           <li>Wind: ${dates[0].wind}</li>
           <li>Humidity: ${dates[0].humidity}</li>
         <p class="card-text"></p>
-      </div>
-    </div>
+    
   </div>
 </div>
 `
   );
-
+  displayImg(dates[0].icon);
   if (dates.length === 6) {
     for (var i = 1; i < dates.length; i++) {
       $("#5-day-forecast").append(
         `
-  <div class="card col-2">
+  <div class="card col-lg-2 col-md-4 col-sm-6">
     <div class="card-body">
       <h5 class="card-title">${dates[i].date}</h5>
       <img src='https://openweathermap.org/img/wn/${dates[i].icon}@2x.png' alt="icon"/>
@@ -191,10 +186,10 @@ function displayData(dates, city) {
     for (var i = 0; i < dates.length; i++) {
       $("#5-day-forecast").append(
         `
-  <div class="card col-2">
+  <div class="card col-lg-2 col-md-4 col-sm-6">
     <div class="card-body">
       <h5 class="card-title">${dates[i].date}</h5>
-      <img class="card-img-top" <img src='https://openweathermap.org/img/wn/${dates[i].icon}@2x.png'> alt="icon"><${dates[i].icon}/>
+      <img class="card-img-top" <img src='https://openweathermap.org/img/wn/${dates[i].icon}@2x.png'>
       <ul>
         <li>Temp: ${dates[i].temp}</li>
         <li>Wind: ${dates[i].wind}</li>
@@ -212,11 +207,9 @@ function saveToLocalStorage(city) {
   // if local storage is empty - searchHistory array is blank
   if (localStorage.length === 0) {
     var searchHistory = [];
-    console.log(searchHistory);
   } else {
     // if not search history = localStorage
     var searchHistory = JSON.parse(localStorage.getItem("cities"));
-    console.log(searchHistory);
   }
   for (var i = 0; i < searchHistory.length; i++) {
     // if city is already in the search history array remove it
@@ -258,7 +251,7 @@ displayHistoryButtons();
 function capitaliseEachWord(element) {
   // Capitalises each first letter of a word, the rest is lowercase. good for names and places.
   var words = element.split(" ");
-  console.log(words);
+
   for (let i = 0; i < words.length; i++) {
     words[i] = words[i][0].toUpperCase() + words[i].substr(1);
   }
@@ -267,4 +260,48 @@ function capitaliseEachWord(element) {
   /* removes the commas, that are added when split() happens */
   words = words.replaceAll(",", " ");
   return words;
+}
+
+function displayImg(icon) {
+  console.log(icon);
+  switch (icon) {
+    case "04d":
+      iconImg = "cloudy-sky";
+      $(".bg-img").addClass(iconImg);
+      break;
+    case "11d":
+      iconImg = "thunder-storm";
+      $(".bg-img").addClass(iconImg);
+      break;
+    case "09d":
+      iconImg = "rain-showers";
+      $(".bg-img").addClass(iconImg);
+      break;
+    case "10d":
+      iconImg = "rain";
+      $(".bg-img").addClass(iconImg);
+      break;
+    case "13d":
+    case "13n":
+      iconImg = "snow";
+      $(".bg-img").addClass(iconImg);
+      break;
+    case "50d":
+      iconImg = "fog";
+      $(".bg-img").addClass(iconImg);
+      break;
+    case "01d":
+      iconImg = "sunny-day";
+      $(".bg-img").addClass(iconImg);
+      break;
+    case "02d":
+    case "02n":
+    case "03d":
+    case "03n":
+      iconImg = "some-cloud-blue-sky";
+      $(".bg-img").addClass(iconImg);
+      break;
+  }
+  console.log(iconImg);
+  return iconImg;
 }
