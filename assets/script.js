@@ -8,7 +8,7 @@ $("#search-button").on("click", function (event) {
   $("#search-input").val("");
 });
 
-//  Gets the data for the city from t he API by an ajax call
+//  Gets the data for the city from the API by an ajax call
 function getTheWeatherData(city) {
   $.ajax({
     url:
@@ -56,6 +56,8 @@ function getTheWeatherData(city) {
         index.icon = getMode(index.icon);
       }
     });
+
+    removeBackgroundImage();
     displayData(dateObjects, city); /* displays the data to the html page* */
     saveToLocalStorage(city); /*saves the city to local storage */
     displayHistoryButtons(city); /*makes a button on each search*/
@@ -149,7 +151,7 @@ function displayData(dates, city) {
   $("#5-day-forecast").empty();
   $("#today").append(
     `
-    <div class="card" style="width: 60%">
+    <div class="card">
       <div class="card-body">
         <h2 class="card-title" id="city">${city} ${dates[0].date}<img src='https://openweathermap.org/img/wn/${dates[0].icon}@2x.png' alt="icon"/></h2>
 
@@ -163,6 +165,8 @@ function displayData(dates, city) {
 </div>
 `
   );
+  console.log(dates[0].icon);
+  console.log($("weather-bg-img"));
   displayImg(dates[0].icon);
   if (dates.length === 6) {
     for (var i = 1; i < dates.length; i++) {
@@ -235,6 +239,7 @@ function displayHistoryButtons() {
   // get the array from local storage
   var getSearchHistory = JSON.parse(localStorage.getItem("cities"));
   // got every element of the array, create a button
+
   for (var i = 0; i < getSearchHistory.length; i++) {
     $("#history").append(
       `<button type="button" class="search-history-btn btn btn-primary">${getSearchHistory[i]}</button>`
@@ -263,45 +268,58 @@ function capitaliseEachWord(element) {
 }
 
 function displayImg(icon) {
-  console.log(icon);
+  var iconImg;
+  console.log("old icon", iconImg);
   switch (icon) {
     case "04d":
+    case "04n":
       iconImg = "cloudy-sky";
-      $(".bg-img").addClass(iconImg);
       break;
     case "11d":
+    case "11d":
       iconImg = "thunder-storm";
-      $(".bg-img").addClass(iconImg);
       break;
     case "09d":
+    case "09n":
       iconImg = "rain-showers";
-      $(".bg-img").addClass(iconImg);
       break;
     case "10d":
+    case "10n":
       iconImg = "rain";
-      $(".bg-img").addClass(iconImg);
       break;
     case "13d":
     case "13n":
       iconImg = "snow";
-      $(".bg-img").addClass(iconImg);
       break;
     case "50d":
+    case "50n":
       iconImg = "fog";
-      $(".bg-img").addClass(iconImg);
       break;
     case "01d":
       iconImg = "sunny-day";
-      $(".bg-img").addClass(iconImg);
       break;
     case "02d":
     case "02n":
     case "03d":
     case "03n":
       iconImg = "some-cloud-blue-sky";
-      $(".bg-img").addClass(iconImg);
       break;
+    default:
+      iconImg = "";
   }
-  console.log(iconImg);
+
+  $(".weather-bg-img").addClass(iconImg);
+  console.log("new icon ", iconImg);
   return iconImg;
+}
+
+// function to remove backbackground image
+function removeBackgroundImage() {
+  var classes = $(".weather-bg-img").attr("class").split(" ");
+  // if the length of .weather-bg-img is greater than 3, an image is being displayed
+  if (classes.length > 3) {
+    // get the last element
+    var weatherImg = classes.pop();
+    $(".weather-bg-img").removeClass(weatherImg);
+  }
 }
