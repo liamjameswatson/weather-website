@@ -12,7 +12,7 @@ To search for a forcast, simply enter a location in the search input, or click o
 
 ## Screenshot
 
-![Screenshot](./assets/screenshot.png)
+![Screenshot](./assets/images/screenshot.png)
 
 ## The website
 
