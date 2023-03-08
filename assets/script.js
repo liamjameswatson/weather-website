@@ -206,21 +206,17 @@ function displayData(dates, city) {
 
 function saveToLocalStorage(city) {
   // if local storage is empty - searchHistory array is blank
-  if (localStorage.length === 0) {
-    var searchHistory = [];
-  } else {
-    // if not search history = localStorage
-    var searchHistory = JSON.parse(localStorage.getItem("cities"));
-  }
+  var searchHistory = JSON.parse(localStorage.getItem("cities")) || [];
+
   for (var i = 0; i < searchHistory.length; i++) {
     // if city is already in the search history array remove it
     if (searchHistory[i] === city) {
       searchHistory.splice(i, 1);
     }
-    // add the searched city to the first item in searchHistory array
   }
+  // add the searched city to the first item in searchHistory array
   searchHistory.unshift(city);
-  searchHistory;
+
   if (searchHistory.length > 10) {
     // if searHistory array is longer than 10, delete the last element
     searchHistory.pop();
