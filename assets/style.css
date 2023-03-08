@@ -11,6 +11,12 @@ li {
 .card {
   margin: 1%;
   padding: 1%;
+  background: rgb(250, 251, 251) !important;
+}
+
+.card-body {
+  background-color: rgba(0, 0, 255, 0.032);
+  padding: 10px !important;
 }
 
 .search-history-btn {

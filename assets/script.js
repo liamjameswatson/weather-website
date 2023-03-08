@@ -240,6 +240,10 @@ function displayHistoryButtons() {
   var getSearchHistory = JSON.parse(localStorage.getItem("cities"));
   // got every element of the array, create a button
 
+  // Check to see if local storage is empty. If so, getSearchHistory = []. This prevents a null value which throws an error
+  if (getSearchHistory === null) {
+    getSearchHistory = [];
+  }
   for (var i = 0; i < getSearchHistory.length; i++) {
     $("#history").append(
       `<button type="button" class="search-history-btn btn btn-primary">${getSearchHistory[i]}</button>`
