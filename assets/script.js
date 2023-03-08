@@ -57,7 +57,6 @@ function getTheWeatherData(city) {
       }
     });
 
-    removeBackgroundImage();
     displayData(dateObjects, city); /* displays the data to the html page* */
     saveToLocalStorage(city); /*saves the city to local storage */
     displayHistoryButtons(city); /*makes a button on each search*/
@@ -165,9 +164,7 @@ function displayData(dates, city) {
 </div>
 `
   );
-  console.log(dates[0].icon);
-  console.log($("weather-bg-img"));
-  displayImg(dates[0].icon);
+
   if (dates.length === 6) {
     for (var i = 1; i < dates.length; i++) {
       $("#5-day-forecast").append(
@@ -224,8 +221,8 @@ function saveToLocalStorage(city) {
   }
   searchHistory.unshift(city);
   searchHistory;
-  if (searchHistory.length > 5) {
-    // if searHistory array is longer than 5, delete the last element
+  if (searchHistory.length > 10) {
+    // if searHistory array is longer than 10, delete the last element
     searchHistory.pop();
   }
   // send the search history to local storage
@@ -269,61 +266,4 @@ function capitaliseEachWord(element) {
   /* removes the commas, that are added when split() happens */
   words = words.replaceAll(",", " ");
   return words;
-}
-
-function displayImg(icon) {
-  var iconImg;
-  console.log("old icon", iconImg);
-  switch (icon) {
-    case "04d":
-    case "04n":
-      iconImg = "cloudy-sky";
-      break;
-    case "11d":
-    case "11d":
-      iconImg = "thunder-storm";
-      break;
-    case "09d":
-    case "09n":
-      iconImg = "rain-showers";
-      break;
-    case "10d":
-    case "10n":
-      iconImg = "rain";
-      break;
-    case "13d":
-    case "13n":
-      iconImg = "snow";
-      break;
-    case "50d":
-    case "50n":
-      iconImg = "fog";
-      break;
-    case "01d":
-      iconImg = "sunny-day";
-      break;
-    case "02d":
-    case "02n":
-    case "03d":
-    case "03n":
-      iconImg = "some-cloud-blue-sky";
-      break;
-    default:
-      iconImg = "";
-  }
-
-  $(".weather-bg-img").addClass(iconImg);
-  console.log("new icon ", iconImg);
-  return iconImg;
-}
-
-// function to remove backbackground image
-function removeBackgroundImage() {
-  var classes = $(".weather-bg-img").attr("class").split(" ");
-  // if the length of .weather-bg-img is greater than 3, an image is being displayed
-  if (classes.length > 3) {
-    // get the last element
-    var weatherImg = classes.pop();
-    $(".weather-bg-img").removeClass(weatherImg);
-  }
 }
