@@ -8,7 +8,7 @@ This website receives weather data from an API (Openweather API), filters the in
 
 ## Useage
 
-To search for a forcast, simply enter a location in the search input, or click on one of the mose recent searches buttons.
+To search for a forecast, simply enter a location in the search input, or click on one of the mose recent searches buttons.
 
 ## Screenshot
 
